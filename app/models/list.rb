@@ -1,6 +1,6 @@
 class List < ApplicationRecord
 
-	def index
+	has_many :items
 
-	end
+
 end
