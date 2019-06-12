@@ -1,0 +1,18 @@
+<h1><%= @list.name %></h1>
+<section class="todoapp">
+	<section class="main">
+		<input id="toggle-all" class="toggle-all" type="checkbox">
+		<label for="toggle-all">Mark all as complete</label>
+		<ul class="todo-list">
+			<% @list.items.each do |item| %>
+				<li>
+					<div class="view">
+						<%= item.description %>
+					</div>
+				</li>
+			<%end%>
+		</ul>
+	</section>
+	<footer class="footer">
+	</footer>
+</section>

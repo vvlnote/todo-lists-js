@@ -3,25 +3,42 @@
 <section class="todoapp">
 	<header class="header">
 		<h1>Lists</h1>
-		<input class="new-todo" placeholder="Make a base list" autofocus>
+		<%= form_for(@new_list) do |f| %>
+			<%= f.text_field :name, :class => "new-todo" %>
+		<%end%>
+
 	</header>
 	<section class="main">
-		<input id="toggle-all" class="toggle-all" type="checkbox">
-		<label for="toggle-all">Mark all as complete</label>
 		<ul class="todo-list">
-			<li>
-				<div class="view">
-					<label> Annual Goal list </label>
-				</div>
-			</li>
-			<li>
-				<div class="view">
-					<label> Weekend doto list </label>
-				</div>
-			</li>			
+			<% @lists.each do |list| %>
+				<li class=" ">
+					<div class="view">
+						<label><%= link_to list.name, list_path(list) %></label>
+					</div>
+				</li>
+			<%end%>
 		</ul>
-
 	</section>
 	<footer class="footer">
 	</footer>
 </section>
+<section class="todoapp">
+	<% if @items.size > 0 %>
+		<h2>All list items</h2>
+		
+		<section class="main">
+			<ul class="todo-list">
+				<% @items.each do |item| %>
+					<li class=" ">
+						<div class="view">
+							<label><%= item.description %></label>
+						</div>
+					</li>
+				<%end%>
+			</ul>
+		</section>
+	<% end %>
+</section>
+<!--	<footer class="footer">
+	</footer>
+</section>-->
