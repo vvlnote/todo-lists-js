@@ -8,7 +8,9 @@ Rails.application.routes.draw do
   		get 'signup', to: 'devise/registrations#new'
   	end
   
-  resources :lists
+  resources :lists do
+    resources :items
+  end
 
   root to: 'application#welcome'
 

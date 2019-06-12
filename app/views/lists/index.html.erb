@@ -4,7 +4,7 @@
 	<header class="header">
 		<h1>Lists</h1>
 		<%= form_for(@new_list) do |f| %>
-			<%= f.text_field :name, :class => "new-todo" %>
+			<%= f.text_field :name, :class => "new-todo", :placeholder => (@new_list.errors.full_messages_for(:name).first || "Enter a new list name ...") %>
 		<%end%>
 
 	</header>
@@ -25,7 +25,6 @@
 <section class="todoapp">
 	<% if @items.size > 0 %>
 		<h2>All list items</h2>
-		
 		<section class="main">
 			<ul class="todo-list">
 				<% @items.each do |item| %>
