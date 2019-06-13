@@ -13,14 +13,18 @@ class ItemsController < ApplicationController
 
 	def update
 		#raise params.inspect
-		@list = List.find(params[:list_id])
 		@item = Item.find(params[:id])
-		#@item.update(item_params)
 		@item.status = 1 #completed
 		@item.save
 
 		redirect_to list_path(@item.list)
+	end
 
+	def destroy
+		item = Item.find(params[:id])
+		list = item.list
+		item.destroy
+		redirect_to list_path(list)
 	end
 
 	private 

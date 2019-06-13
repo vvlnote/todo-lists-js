@@ -14,8 +14,8 @@
 						<%= form_for([@list, item]) do |f| %>
 							<label><%= item.description %></label>
 							<%=f.submit "completed"%>
+							<%= button_to 'X', list_item_path(@list, item), :method => "delete", :class => "destroy" %>
 						<%end%>
-
 					</div>
 				</li>
 			<%end%>
