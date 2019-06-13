@@ -4,6 +4,10 @@ class ListsController <ApplicationController
 	def index
 		@lists = List.where(:user_id => current_user.id)
 		@items = get_all_items(@lists)
+		@username = current_user.username
+		if @username.empty?
+			@username = current_user.email
+		end
 		@new_list = List.new
 	end
 

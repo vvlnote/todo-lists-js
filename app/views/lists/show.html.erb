@@ -1,7 +1,7 @@
 
 <section class="todoapp">
 	<header class="header">
-		<h1><%=@list.name %></h1>
+		<h1 style="font-size:50px"><%=@list.name %></h1>
 		<%= form_for([@list, @item]) do |f| %>
 			<%= f.text_field :description, :class => "new-todo", :placeholder => (@item.errors.full_messages_for(:description).first || "Enter an item ...")%>
 		<%end%>
@@ -9,9 +9,15 @@
 	<section class="main">
 		<ul class="todo-list">
 			<% @list.items.each do |item| %>
-				<li>
+				<li class="<%= "completed" if item.completed? %>">
 					<div class="view">
-						<label><%= item.description %></label>
+						<%= form_for([@list, item]) do |f| %>
+							<!--<input class="toggle" <%= "checked='checked'" if item.completed?%>>-->
+							<label><%= item.description %></label>
+						<!--<input class="toggle" type="checkbox" <%= "checked='checked" if true %>>-->
+							<%=f.submit "completed"%>
+						<%end%>
+						<!--<label><%= item.description %></label>-->
 					</div>
 				</li>
 			<%end%>
