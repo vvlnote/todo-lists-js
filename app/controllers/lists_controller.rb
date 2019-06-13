@@ -30,6 +30,7 @@ class ListsController <ApplicationController
 
 	end
 
+
 	private
 
 	def list_params

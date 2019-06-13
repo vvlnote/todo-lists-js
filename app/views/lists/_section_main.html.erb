@@ -1,0 +1,15 @@
+<section class="main">
+	<ul class="todo-list">
+		<% collections.each do |c| %>
+			<li class="<%='completed' if c.completed? %>">
+				<div class="view">
+					<% if !is_item %>
+						<label><%= link_to c[field_name], list_path(c) %></label>
+					<%else%>
+						<label><%=c[field_name] %></label>
+					<%end%>
+				</div>
+			</li>
+		<%end%>
+	</ul>
+</section>

@@ -12,12 +12,10 @@
 				<li class="<%= "completed" if item.completed? %>">
 					<div class="view">
 						<%= form_for([@list, item]) do |f| %>
-							<!--<input class="toggle" <%= "checked='checked'" if item.completed?%>>-->
 							<label><%= item.description %></label>
-						<!--<input class="toggle" type="checkbox" <%= "checked='checked" if true %>>-->
 							<%=f.submit "completed"%>
 						<%end%>
-						<!--<label><%= item.description %></label>-->
+
 					</div>
 				</li>
 			<%end%>
