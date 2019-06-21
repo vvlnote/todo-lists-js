@@ -4,9 +4,14 @@
 		<h1 style="font-size:50px"><%=@list.name %></h1>
 		<div class="new-todo">
 			<%= form_for([@list, @list_item]) do |f| %>
-				<%= f.collection_select :id, @items, :id, :description %>
+				<%= f.text_field :item_id, list: "item_autocomplete" %>
+				<datalist id="item_autocomplete">
+					<% @items.each do |item| %>
+						<option value ="<%= item.description %>">
+					<%end%>
+				</datalist>
 				<%= f.submit "add item" %>
-			<%end%>
+			<%end%>	
 		</div>
 	</header>
 	<section class="main">

@@ -27,6 +27,7 @@ class ListsController <ApplicationController
 			redirect_to list_path(@new_list)
 		else
 			@lists = List.where(:user_id => current_user.id)
+			binding.pry
 			@items = get_all_items(@lists)
 			render :index
 		end
