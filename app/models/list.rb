@@ -6,7 +6,6 @@ class List < ApplicationRecord
 
 	validates :name, presence: true
 	
-	scope :of_user, -> {where(:user_id => User.current_user.id)}
 
 
 	

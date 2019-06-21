@@ -2,7 +2,7 @@ class ListsController <ApplicationController
 
 
 	def index
-		#lists = List.of_user
+		
 		@lists = List.where(:user_id => current_user.id)
 		@list_items = get_all_list_items(@lists)
 		@items = get_all_items(@lists)

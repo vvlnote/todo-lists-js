@@ -2,6 +2,8 @@ class ListItem < ApplicationRecord
 	belongs_to :list
 	belongs_to :item
 
+	scope :completed?, -> {where(status == 1)}
+
 	STATUS = {
 		:incompleted => 0,
 		:completed => 1
@@ -24,9 +26,9 @@ class ListItem < ApplicationRecord
 		list_items
 	end
 
-	def completed?
-		self.status == STATUS[:completed]
-	end
+	#def completed?
+	#	self.status == STATUS[:completed]
+	#end
 
 	def incompleted?
 		self.status == STATUS[:incompleted]
