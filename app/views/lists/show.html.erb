@@ -2,20 +2,23 @@
 <section class="todoapp">
 	<header class="header">
 		<h1 style="font-size:50px"><%=@list.name %></h1>
-		<%= form_for([@list, @item]) do |f| %>
-			<%= f.text_field :description, :class => "new-todo", :placeholder => (@item.errors.full_messages_for(:description).first || "Enter an item ...")%>
-		<%end%>
+		<div class="new-todo">
+			<%= form_for([@list, @list_item]) do |f| %>
+				<%= f.collection_select :id, @items, :id, :description %>
+				<%= f.submit "add item" %>
+			<%end%>
+		</div>
 	</header>
 	<section class="main">
 		<ul class="todo-list">
-			<% @list.items.each do |item| %>
-				<li class="<%= "completed" if item.completed? %>">
+			<% @list_items.each do |list_item| %>
+				<li class="<%= "completed" if list_item.completed? %>">
 					<div class="view">
-						<%= form_for([@list, item]) do |f| %>
-							<label><%= item.description %></label>
+						<%= form_for([@list, list_item]) do |f| %>
+							<label><%= list_item.item_description(list_item.item_id) %></label>
 							<%=f.submit "completed"%>
 						<%end%>
-						<%= button_to 'X', list_item_path(@list, item), :method => "delete", :class => "destroy" %>
+						<%= button_to 'X', list_list_item_path(@list, list_item), :method => "delete", :class => "destroy" %>
 					</div>
 				</li>
 			<%end%>

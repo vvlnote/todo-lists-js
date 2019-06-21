@@ -9,7 +9,8 @@ Rails.application.routes.draw do
   	end
   
   resources :lists do
-    resources :items
+    #resources :items
+    resources :list_items
   end
 
   root to: 'application#welcome'

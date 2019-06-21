@@ -19,6 +19,6 @@
 <section class="todoapp">
 	<h1>All list Items</h1>
 	<% if @items.size > 0 %>
-		<%= render :partial => 'section_main', :locals => {:collections => @items, :field_name => 'description', :is_item => true} %>
+		<%= render :partial => 'section_main', :locals => {:collections => @list_items, :field_name => 'description', :is_item => true} %>
 	<% end %>
 </section>

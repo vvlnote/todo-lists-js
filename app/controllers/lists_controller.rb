@@ -3,6 +3,7 @@ class ListsController <ApplicationController
 
 	def index
 		@lists = List.where(:user_id => current_user.id)
+		@list_items = get_all_list_items(@lists)
 		@items = get_all_items(@lists)
 		@username = current_user.username
 		if @username.empty?
@@ -13,7 +14,9 @@ class ListsController <ApplicationController
 
 	def show
 		@list = List.find(params[:id])
-		@item = Item.new
+		@list_item = ListItem.new
+		@list_items = ListItem.get_list_items_of(@list)
+		@items = Item.all
 	end
 
 	def create
@@ -43,11 +46,22 @@ class ListsController <ApplicationController
 		params.require(:list).permit(:name, :description, :user_id)
 	end
 
-	def get_all_items(lists)
+	def get_all_list_items(lists)
 		items = []
-		@lists.each do |list|
-			items << list.items
+
+		lists.each do |list|
+			items << ListItem.get_list_items_of(list)
 		end
 		items.flatten
 	end
+
+	def get_all_items(lists)
+		items = []
+
+		lists.each do |list|
+			items << ListItem.get_items_of(list)
+		end
+		items.flatten
+	end
+
 end

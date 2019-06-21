@@ -7,7 +7,7 @@
 						<label><%= link_to c[field_name], list_path(c) %></label>
 						<%= button_to 'X', list_path(c), :method => "delete", :class => "destroy" %>
 					<%else%>
-						<label><%=c[field_name] %></label>
+						<label><%=c.item_description(c.item_id)%></label>
 					<%end%>
 				</div>
 			</li>
