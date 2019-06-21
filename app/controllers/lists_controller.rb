@@ -2,6 +2,7 @@ class ListsController <ApplicationController
 
 
 	def index
+		#lists = List.of_user
 		@lists = List.where(:user_id => current_user.id)
 		@list_items = get_all_list_items(@lists)
 		@items = get_all_items(@lists)
@@ -27,8 +28,14 @@ class ListsController <ApplicationController
 			redirect_to list_path(@new_list)
 		else
 			@lists = List.where(:user_id => current_user.id)
-			binding.pry
+			#binding.pry
 			@items = get_all_items(@lists)
+			#binding.pry
+			@list_items = get_all_list_items(@lists)
+			@username = current_user.username
+			if @username.empty?
+				@username = current_user.email
+			end
 			render :index
 		end
 
@@ -64,5 +71,6 @@ class ListsController <ApplicationController
 		end
 		items.flatten
 	end
+
 
 end
