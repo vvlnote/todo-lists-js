@@ -3,6 +3,7 @@ class ListItem < ApplicationRecord
 	belongs_to :item
 
 	#scope :completed?, -> {where(status: 1)}
+	scope :get_list_items_of, ->(list) { where("list_id == ?", list.id)}
 
 	STATUS = {
 		:incompleted => 0,
@@ -12,19 +13,12 @@ class ListItem < ApplicationRecord
 	def self.get_items_of(list)
 		list_items = []
 		items = []
-		list_items = self.get_list_items_of(list)
+		#list_items = self.get_list_items_of(list)
+		list_items = ListItem.get_list_items_of(list)
+		binding.pry
 		items = list_items.map {|item| Item.find(item.item_id)}
 	end
 
-	def self.get_list_items_of(list)
-		list_items =[]
-		ListItem.all.each do |list_item|
-			if list_item.list_id == list.id
-				list_items << list_item
-			end
-		end
-		list_items
-	end
 
 	def completed?
 		self.status == STATUS[:completed]
