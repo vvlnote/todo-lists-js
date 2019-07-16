@@ -11,6 +11,10 @@ class ListsController <ApplicationController
 			@username = current_user.email
 		end
 		@new_list = List.new
+		respond_to do |f|
+			f.html {render :index}
+			f.json {render json: @lists}
+		end
 	end
 
 	def show
@@ -18,6 +22,10 @@ class ListsController <ApplicationController
 		@list_item = ListItem.new
 		@list_items = ListItem.get_list_items_of(@list)
 		@items = Item.all
+		respond_to do |f|
+			f.html {render :show}
+			f.json {render json: @list}
+		end
 	end
 
 	def create
@@ -25,7 +33,11 @@ class ListsController <ApplicationController
 		@new_list.name = params[:list][:name]
 		@new_list.user = current_user
 		if @new_list.save
-			redirect_to list_path(@new_list)
+			respond_to do |f|
+				f.html {redirect_to list_path(@new_list)}
+				f.json {render json: @lists}
+			end
+			#redirect_to list_path(@new_list)
 		else
 			@lists = List.where(:user_id => current_user.id)
 			#binding.pry
@@ -45,7 +57,11 @@ class ListsController <ApplicationController
 		list = List.find(params[:id])
 		list.items.clear
 		list.destroy
-		redirect_to lists_path
+		respond_to do |f|
+			f.html {redirect_to lists_path}
+			f.json {head :no_content}
+		end
+		#redirect_to lists_path
 	end
 
 	private
