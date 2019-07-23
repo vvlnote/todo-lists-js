@@ -23,7 +23,7 @@ class ListsController <ApplicationController
 		@list_items = ListItem.get_list_items_of(@list)
 		@items = Item.all
 		respond_to do |f|
-			f.html {render :show}
+			f.html
 			f.json {render json: @list}
 		end
 	end
@@ -35,7 +35,7 @@ class ListsController <ApplicationController
 		if @new_list.save
 			respond_to do |f|
 				f.html {redirect_to list_path(@new_list)}
-				f.json {render json: @lists}
+				f.json {render json: @new_list}
 			end
 			#redirect_to list_path(@new_list)
 		else
