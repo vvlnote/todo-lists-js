@@ -27,15 +27,22 @@ function listenClickHandlers() {
 		e.preventDefault();
 		console.log('click on show detail link, data-id = ', $(this).attr('data-id'));
 		let id = $(this).attr('data-id');
-		
-		fetch(`/lists/${id}.json`)
+		let x = document.getElementsByClassName("show_items")[parseInt(id)-1];
+		if (x.style.display === "block"){
+			x.style.display = "none";
+
+		} else {
+			x.style.display = "block";
+			fetch(`/lists/${id}.json`)
 			.then(res => res.json())
 			.then(data => {
-				
+
 				let list = new List(data);
 				let listItemsHTML = list.listItemsHTML();
 				document.getElementsByClassName("show_items")[parseInt(id)-1].innerHTML = listItemsHTML;
 			} );
+		}
+		
 	})
 }
 function getLists() {
