@@ -25,7 +25,6 @@ function listenClickHandlers() {
 
 	$(document).on('click', ".show_detail", function(e) {
 		e.preventDefault();
-		console.log('click on show detail link, data-id = ', $(this).attr('data-id'));
 		let id = $(this).attr('data-id');
 		let x = document.getElementsByClassName("show_items")[parseInt(id)-1];
 		if (x.style.display === "block"){
@@ -44,8 +43,59 @@ function listenClickHandlers() {
 		}
 		
 	})
+
+	$("#bNewList").on('click', function(e) {
+		e.preventDefault();
+
+	})
+	// $("#item_input").on("keyup", function(e) {
+	// 	e.preventDefault();
+	// 	if (e.keyCode === 13) {
+	// 		//go to display the new list
+	// 		let value = document.getElementById('item_input').value;
+	// 		let listItemHTML = `<li>${value}</li>`;
+	// 		document.getElementById('list_items').innerHTML += listItemHTML;
+	// 		document.getElementById('item_input').value = '';
+
+	// 	}
+	// })
+
+	$("#new_list").on("submit", function(e) {
+		e.preventDefault();
+		const values = $(this).serialize();
+		console.log(`${values}`);
+		$.post("/lists", values).done(function(data){
+			console.log(data);
+			$("#app-container").html("");
+			$("#app-container").html(`
+				<h1> New List Name: ${data.name}`);
+		});
+
+
+
+		// let list_name = document.getElementById("list_name").value;
+		// console.log(`${list_name}`);
+		// const list_items = document.querySelectorAll('#list_items li');
+		// console.log(list_items.length);
+		// console.log(`${list_items[0].textContent}`);
+		// postItems(list_items);
+
+		
+
+	})
+	$("#add_item").on("click", function(e) {
+		e.preventDefault();
+		let value = document.getElementById('item_input').value;
+		if (value.length > 0 ){
+			let listItemHTML = `<li>${value}</li>`;
+			document.getElementById('list_items').innerHTML += listItemHTML;
+			document.getElementById('item_input').value = '';
+		}
+	})
+
 }
 function getLists() {
+	console.log('get lists');
 	fetch(`lists.json`)
 		.then(res => res.json())
 		.then(data => {
@@ -65,10 +115,27 @@ function getItems() {
 		.then(res => res.json())
 		.then(data => {
 			data.forEach(d => {
+				console.log(d);
 				let item = new Item(d);
 				items.push(item);
 			});
 		});
+}
+
+
+function postItems(list_items) {
+	console.log("in postItems");
+	const url = "http://localhost:3000/items.json";
+	list_items.forEach(item => {
+		console.log(`${item.textContent}`);
+		let data={
+			description: `"${item.textContent}"`
+		};
+		$.post(url, data, function(data, status) {
+			console.log(`${data} and status is ${status}`);
+		});
+	})
+
 }
 
 
@@ -108,7 +175,9 @@ List.prototype.listItemsHTML = function() {
 	let itemsHTML = `<ul>`;
 	this.items.forEach(item => {
 		let itemHTML = `
-			<li>${item.description}</li>`;
+			<li>${item.description}
+				<button class="item-complete">complete</button> 
+			</li>`;
 		itemsHTML += itemHTML;
 	})
 	itemsHTML += `</ul>`;

@@ -6,4 +6,8 @@ class ItemsController < ApplicationController
 			f.json {render json: @items}
 		end
 	end
+
+	def create
+		
+	end
 end

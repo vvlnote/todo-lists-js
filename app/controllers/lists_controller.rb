@@ -33,25 +33,39 @@ class ListsController <ApplicationController
 		@new_list.name = params[:list][:name]
 		@new_list.user = current_user
 		if @new_list.save
-			respond_to do |f|
-				f.html {redirect_to list_path(@new_list)}
-				f.json {render json: @new_list}
-			end
-			#redirect_to list_path(@new_list)
+			render json: @new_list
 		else
-			@lists = List.where(:user_id => current_user.id)
-			#binding.pry
-			@items = get_all_items(@lists)
-			#binding.pry
-			@list_items = get_all_list_items(@lists)
-			@username = current_user.username
-			if @username.empty?
-				@username = current_user.email
-			end
-			render :index
+			redirect :new
 		end
+		# @new_list = List.new
+		# @new_list.name = params[:list][:name]
+		# @new_list.user = current_user
+		# if @new_list.save
+		# 	respond_to do |f|
+		# 		f.html {redirect_to list_path(@new_list)}
+		# 		f.json {render json: @new_list}
+		# 	end
+		# 	#redirect_to list_path(@new_list)
+		# else
+		# 	@lists = List.where(:user_id => current_user.id)
+		# 	#binding.pry
+		# 	@items = get_all_items(@lists)
+		# 	#binding.pry
+		# 	@list_items = get_all_list_items(@lists)
+		# 	@username = current_user.username
+		# 	if @username.empty?
+		# 		@username = current_user.email
+		# 	end
+		# 	render :index
+		# end
 
 	end
+
+	def new
+		@list = List.new
+		@items = Item.all
+	end
+
 
 	def destroy
 		list = List.find(params[:id])
