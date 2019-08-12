@@ -3,16 +3,14 @@ class ListsController <ApplicationController
 
 	def index
 		
-		@lists = List.where(:user_id => current_user.id)
-		@list_items = get_all_list_items(@lists)
-		@items = get_all_items(@lists)
-		@username = current_user.username
-		if @username.empty?
-			@username = current_user.email
+		@lists = current_user.lists
+		@user = current_user
+		if @user.username.empty?
+			@user.username = @user.email
 		end
-		@new_list = List.new
 		respond_to do |f|
 			f.html {render :index}
+			#binding.pry
 			f.json {render json: @lists}
 		end
 	end
@@ -29,35 +27,15 @@ class ListsController <ApplicationController
 	end
 
 	def create
-		@new_list = List.new
-		@new_list.name = params[:list][:name]
-		@new_list.user = current_user
+		params[:list][:user_id] = current_user.id
+		binding.pry
+		@new_list = List.new(list_params)
 		if @new_list.save
 			render json: @new_list
 		else
-			redirect :new
+			redirect :index
 		end
-		# @new_list = List.new
-		# @new_list.name = params[:list][:name]
-		# @new_list.user = current_user
-		# if @new_list.save
-		# 	respond_to do |f|
-		# 		f.html {redirect_to list_path(@new_list)}
-		# 		f.json {render json: @new_list}
-		# 	end
-		# 	#redirect_to list_path(@new_list)
-		# else
-		# 	@lists = List.where(:user_id => current_user.id)
-		# 	#binding.pry
-		# 	@items = get_all_items(@lists)
-		# 	#binding.pry
-		# 	@list_items = get_all_list_items(@lists)
-		# 	@username = current_user.username
-		# 	if @username.empty?
-		# 		@username = current_user.email
-		# 	end
-		# 	render :index
-		# end
+
 
 	end
 
@@ -81,7 +59,7 @@ class ListsController <ApplicationController
 	private
 
 	def list_params
-		params.require(:list).permit(:name, :description, :user_id)
+		params.require(:list).permit(:name, :user_id)
 	end
 
 	def get_all_list_items(lists)

@@ -9,6 +9,7 @@ $(function() {
 
 let lists = [];
 let items = [];
+const BASE_URL="http://localhost:3000";
 
 function listenClickHandlers() {
 	console.log("in ListenClickHnadlers");
@@ -26,7 +27,7 @@ function listenClickHandlers() {
 	$(document).on('click', ".show_detail", function(e) {
 		e.preventDefault();
 		let id = $(this).attr('data-id');
-		let x = document.getElementsByClassName("show_items")[parseInt(id)-1];
+		let x = document.getElementById(`show_items_${id}`);
 		if (x.style.display === "block"){
 			x.style.display = "none";
 
@@ -38,72 +39,133 @@ function listenClickHandlers() {
 
 				let list = new List(data);
 				let listItemsHTML = list.listItemsHTML();
-				document.getElementsByClassName("show_items")[parseInt(id)-1].innerHTML = listItemsHTML;
+				//document.getElementsByClassName("show_items")[parseInt(id)-1].innerHTML = listItemsHTML;
+				document.getElementById(`show_items_${id}`).innerHTML = listItemsHTML;
 			} );
 		}
 		
 	})
-
-	$("#bNewList").on('click', function(e) {
+	$(document).on('submit', "#new_list", function(e){
+		console.log('click on submit');
 		e.preventDefault();
+		let newListId = 0;
+		let item_values = document.getElementById('list_items').getElementsByTagName("li");
 
-	})
-	// $("#item_input").on("keyup", function(e) {
-	// 	e.preventDefault();
-	// 	if (e.keyCode === 13) {
-	// 		//go to display the new list
-	// 		let value = document.getElementById('item_input').value;
-	// 		let listItemHTML = `<li>${value}</li>`;
-	// 		document.getElementById('list_items').innerHTML += listItemHTML;
-	// 		document.getElementById('item_input').value = '';
-
-	// 	}
-	// })
-
-	$("#new_list").on("submit", function(e) {
-		e.preventDefault();
-		const values = $(this).serialize();
-		console.log(`${values}`);
-		$.post("/lists", values).done(function(data){
-			console.log(data);
-			$("#app-container").html("");
-			$("#app-container").html(`
-				<h1> New List Name: ${data.name}`);
-		});
-
-
-
-		// let list_name = document.getElementById("list_name").value;
-		// console.log(`${list_name}`);
-		// const list_items = document.querySelectorAll('#list_items li');
-		// console.log(list_items.length);
-		// console.log(`${list_items[0].textContent}`);
-		// postItems(list_items);
-
+		if (item_values.length){console.log(item_values[0].textContent);}
 		
+		//post the list name to the the list id
+		let list_data = {name: document.getElementById('listname').value};
 
+		fetch(`/lists.json`, {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify(list_data)
+		})
+		.then(response => response.json())
+		.then(data => {
+			debugger;
+			// let newList = new List(data);
+			// let listHTML = newList.listHTML();
+			// document.getElementsByClassName("todo-list")[0].innerHTML += listHTML;
+			addAListToLists(data);
+			console.log(data)})
+
+		.catch(error => console.log(`Error: ${error.message}`));
+
+		let item_data = {description: "Apples"};
+		// fetch('http://localhost:3000/items.json', {
+		// 	method: 'POST',
+		// 	credentials: 'omit',
+		// 	headers: {
+		// 		'Content-Type': 'application/json',
+		// 	},
+		// 	body: JSON.stringify(item_data),
+		// })
+		// .then(response => response.json())
+		// .then(data => console.log(data))
+		// .catch(error => console.log(`error: ${error.message}`));
+		debugger;
+				//const values = $(this).serialize();
+		//console.log(`${values}`);
+		// $.post("/lists", values).done(function(data){
+		// 	console.log(data);
+		// 	$("#app-container").html("");
+		// 	$("#app-container").html(`
+		// 		<h1> New List Name: ${data.name}`);
+		// });
+		
+		//clean up the HTML
+		document.getElementById('new-list-section').innerHTML = "";
 	})
-	$("#add_item").on("click", function(e) {
+
+	$(document).on('click', "#add_item", function(e){
+		debugger;
+
 		e.preventDefault();
+		console.log("click on add item button");
 		let value = document.getElementById('item_input').value;
+		console.log(value);
 		if (value.length > 0 ){
 			let listItemHTML = `<li>${value}</li>`;
 			document.getElementById('list_items').innerHTML += listItemHTML;
-			document.getElementById('item_input').value = '';
+		 	document.getElementById('item_input').value = '';
 		}
+	});
+
+	$("#new-list-link").on("click", function(e) {
+		console.log('click on the new-list-link');
+		e.preventDefault();
+		buildANewListForm();
+	
 	})
+
+}
+
+function buildANewListForm() {
+
+	console.log('in buildANewListForm');
+	//build the datalist to display the existing items
+	let options = '';
+	items.forEach((item) => {
+		options += `<option value="${item.description}"></option>`;
+	});
+	console.log(options);
+	let section = document.getElementById('new-list-section');
+
+	section.innerHTML = `<h1>New List</h1><br>`;
+	let formElement = `
+		<form id="new_list" action='#'>
+		<label>New List Name: </label>
+		<input type="text" id="listname" name="listname" value=''>
+		<br>
+		<input type="text" id="item_input" list="itemlist">
+		<button id="add_item">Add Item</button>
+		<br>
+		<ul id="list_items">
+		</ul>
+		<input type='submit' value="Add new list">
+		</form>
+	`;
+	let dataListHTML = `<datalist id="itemlist">${options}</datalist>`;
+
+	section.innerHTML += formElement;
+	section.innerHTML += dataListHTML;
 
 }
 function getLists() {
 	console.log('get lists');
-	fetch(`lists.json`)
+	fetch(`/lists.json`)
 		.then(res => res.json())
 		.then(data => {
 			data.forEach(d => {
-				console.log(d);
-				let list = new List(d);
-				let listHTML = list.listHTML();
-				document.getElementsByClassName("todo-list")[0].innerHTML += listHTML;
+				//debugger;
+				//console.log(d);
+				// let list = new List(d);
+				// let listHTML = list.listHTML();
+				// document.getElementsByClassName("todo-list")[0].innerHTML += listHTML;
+				addAListToLists(d);
 			});
 		});
 }
@@ -115,11 +177,18 @@ function getItems() {
 		.then(res => res.json())
 		.then(data => {
 			data.forEach(d => {
-				console.log(d);
+				//console.log(d);
 				let item = new Item(d);
 				items.push(item);
 			});
 		});
+}
+
+function addAListToLists(data) {
+	let list = new List(data);
+	let listHTML = list.listHTML();
+	let listsHTML =  document.getElementsByClassName("todo-list")[0].innerHTML;
+	document.getElementsByClassName("todo-list")[0].innerHTML = listHTML + listsHTML;
 }
 
 
@@ -153,21 +222,14 @@ class List {
 	}
 };
 
-// List.prototype.listHTML = function() {
-// 	return (`<li><div class="view"><label>
-// 		<a href="http://localhost:3000/lists/${this.id}">${this.name}</a></label>
-// 		<form class="button_to" method="post" action="/lists/${this.id}"
-// 		<input type="hidden" name="_method" value="delete">
-// 		<input class="destroy" type="submit" value="X">
-// 		</form></div></li>`);
-// }
+
 
 List.prototype.listHTML = function() {
 	return (`<li><div class="view"><label>
-			 <a href="/lists/${this.id}" data-id="${this.id}" class="show_detail">${this.name}</a>
+			 <a href="#" data-id="${this.id}" class="show_detail">${this.name}</a>
 			<button class="bDelete">X</button></label>
 			</div>
-			<div class="show_items"></div>
+			<div id="show_items_${this.id}"></div>
 			</li>`);
 }
 
@@ -198,5 +260,11 @@ class Item {
 	constructor(object) {
 		this.id = object.id;
 		this.description = object.description;
+	}
+
+	itemDisplayInItemList() {
+		return(
+			`<option value={this.description}`
+			);
 	}
 }

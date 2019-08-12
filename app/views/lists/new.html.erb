@@ -1,11 +1,17 @@
 <h1> New List </h1>
 
+<form action='#'>
+	<label>New List Name: </label>
+	<input type="text" name='listname' value=''>
+	<br>
+	<input type="text" id="item" list="itemlist">
+	<button id="add_new_item">Add Item</button>
+	<datalist id="itemlist">
+	</datalist>
+	<br>
+	<br>
+	<input type="submit" value="Create a List">
+</form>
 
-
-<%= form_for @list do |f| %>
-	<label>List Name: </label>
-	<%= f.text_field :name %>
-	<%= f.submit "Save new list"%>
-<%end%>
 
 
