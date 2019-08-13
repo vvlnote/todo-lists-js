@@ -10,12 +10,12 @@ class ListsController <ApplicationController
 		end
 		respond_to do |f|
 			f.html {render :index}
-			#binding.pry
 			f.json {render json: @lists}
 		end
 	end
 
 	def show
+		# binding.pry
 		@list = List.find(params[:id])
 		@list_item = ListItem.new
 		@list_items = ListItem.get_list_items_of(@list)
@@ -28,7 +28,7 @@ class ListsController <ApplicationController
 
 	def create
 		params[:list][:user_id] = current_user.id
-		binding.pry
+		# binding.pry
 		@new_list = List.new(list_params)
 		if @new_list.save
 			render json: @new_list
@@ -49,11 +49,6 @@ class ListsController <ApplicationController
 		list = List.find(params[:id])
 		list.items.clear
 		list.destroy
-		respond_to do |f|
-			f.html {redirect_to lists_path}
-			f.json {head :no_content}
-		end
-		#redirect_to lists_path
 	end
 
 	private
