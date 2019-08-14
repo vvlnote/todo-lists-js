@@ -39,13 +39,20 @@ class ListItemsController < ApplicationController
 	end
 
 	def update
-
+		binding.pry
 		list_item = ListItem.find(params[:id])
 		list_item.status = 1
 
-		list_item.save
+		if list_item.save
+			render json: list_item
+		end
 
-		redirect_to list_path(List.find(params[:list_id]))
+		# redirect_to list_path(List.find(params[:list_id]))
+	end
+
+	def show
+		list_item = ListItem.find(params[:id])
+		render json: list_item
 	end
 
 	def destroy

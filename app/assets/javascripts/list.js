@@ -12,11 +12,11 @@ let items = [];
 const BASE_URL="http://localhost:3000";
 
 function listenClickHandlers() {
-	console.log("in ListenClickHnadlers");
-	$('#click-me').on('click', function(e){
-		e.preventDefault();
-		console.log('click detail button');
-	});
+	// console.log("in ListenClickHnadlers");
+	// $('#click-me').on('click', function(e){
+	// 	e.preventDefault();
+	// 	console.log('click detail button');
+	// });
 	$(document).on('click', ".bDelete", function(e){
 		e.preventDefault();
 
@@ -59,6 +59,25 @@ function listenClickHandlers() {
 		e.preventDefault();
 		console.log(e);
 		console.log('click on the complete button');
+		const list_id = this.dataset.listid;
+		const list_item_id = this.dataset.listitemid;
+		const list_item = {status: 1};
+		fetch(`/lists/${list_id}/list_items/${list_item_id}`, {
+			method: 'PATCH',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify(list_item)
+		})
+		.then(response => response.json())
+		.then(data=> {
+			debugger;
+			console.log(data);
+		})
+		.catch(err => console.error(err))
+		debugger;
+		this.disabled = true;
+		this.parentElement.style.textDecoration = "line-through";
 
 	})
 	$(document).on('submit', "#new_list", function(e){
@@ -115,7 +134,6 @@ function listenClickHandlers() {
 				})
 				.then(response => response.json())
 				.then(data => {
-					//debugger;
 					console.log(data);
 					listItemHTML = `<li data-id=${data.id}>${data.description}</li>`;
 					document.getElementById('list_items').innerHTML += listItemHTML;
@@ -152,6 +170,7 @@ function buildANewListForm() {
 	let section = document.getElementById('new-list-section');
 
 	section.innerHTML = `<h1>New List</h1><br>`;
+	//<form id="new_list" onsubmit="createList(); return false;">
 	let formElement = `
 		<form id="new_list" action='#'>
 		<label>New List Name: </label>
@@ -171,6 +190,7 @@ function buildANewListForm() {
 	section.innerHTML += dataListHTML;
 
 }
+
 
 function postNewListItem(list_id) {
 	//get all the list items from ul id="list_items"
@@ -271,10 +291,22 @@ List.prototype.listHTML = function() {
 List.prototype.listItemsHTML = function() {
 	let itemsHTML = `<ul>`;
 	this.items.forEach(item => {
-		let itemHTML = `
-			<li class=''>${item.description}
-				<button class="item-complete">complete</button> 
+		const listItem = this.list_items.find(lItem => lItem.item_id === item.id);
+		const disabled = listItem.status ? true: false;
+		let itemHTML = "";
+		if (disabled) {
+			itemHTML = `
+			<li style="text-decoration:line-through;">${item.description}
+				<button data-listId="${this.id}" data-listItemId="${listItem.id}" class="item-complete" disabled>complete</button> 
 			</li>`;
+			
+		}
+		else {
+			itemHTML = `
+			<li >${item.description}
+				<button data-listId="${this.id}" data-listItemId="${listItem.id}" class="item-complete">complete</button> 
+			</li>`;
+		}
 		itemsHTML += itemHTML;
 	})
 	itemsHTML += `</ul>`;
